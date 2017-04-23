@@ -13,8 +13,8 @@ module.exports = (robot) ->
   robot.enter (res) ->
     res.send "Hello there, my name is Myanbot!  No, I'm not a Nyanbot, I'm a Myancat!  ... I mean bot.  What can I help you with today?"
 
-  robot.hear /kevin/i, (res) ->
-    res.send "Oh Kevin, how could you not like me??"
+  # robot.hear /test/i, (res) ->
+  #   res.send "test response"
 
 # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
