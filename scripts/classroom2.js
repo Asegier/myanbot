@@ -24,28 +24,40 @@ module.exports = robot => {
   robot.hear(/(.*)/i, res => {
     switch (fsm.current) {
       case `greet`:
-        res.reply('current state ***: '+fsm.current);
-        var name, user;
-        res.reply("Ok, lets start");
-        // fsm.goStandby();
+        let name = robot.brain.get() || null
+        if (name){
+          res.reply(`Hi ${name}!`);
+        }
+        res.reply("I'm your SolarLeap Assistant");
+        res.reply("I can help you find what you need and get things done");
+        res.reply("To learn what you can do, pick any of the following options: 1) Keywordsearch, 2) Reccomendation, 3) Just chat");
+        fsm.goStandby();
         break;
       case `standby`:
-        res.reply('current state !!!!!!: '+fsm.current);
+        switch (res.match[1]) {
+          case '1':
+            res.reply(`What are you looking for?`)
+            fsm.goKeywordsearch();
+            break;
+          case '2':
+            res.reply(res.match[1])
+            break;
+          case '3':
+            res.reply(res.match[1])
+            break;
+          default:
+            res.reply(`I didn't catch that`)
+        }
         // return fsm.goKeywordsearch();
         break;
       case `keywordsearch`:
-        res.reply('current state !!!!!!: '+fsm.current);
-        // return fsm.goKeywordsearch();
-        // `keywordsearch`
-        res.send(fsm.current)
-        let input = res.match[1] // get the text inputted from user
+        let input = res.match.input // get the text inputted from user
         let nounArr = []
         nounArr.push(getNouns(input))
-        nounArr.push(fsm.current)
         // convert array of words into string for output
         // this should be wikipedia links
         let output = nounArr.join()
-        res.send(output)
+        res.reply(output)
         break;
       default:
         console.log('no fsm.current found')

@@ -2,7 +2,7 @@ const StateMachine = require('javascript-state-machine');
 const solr = require('solr-client');
 const client = solr.createClient();
 
-export const fsm = StateMachine.create({
+const fsm = StateMachine.create({
   // states: greet, standby, keywordsearch, assistedsearch, recommended, chatter
   initial: 'greet',
   events: [
@@ -15,7 +15,10 @@ export const fsm = StateMachine.create({
   ],
   callbacks: {
     ongreet: (event, from, to) => {
-      console.log('current state *********** '+fsm.current)
+
+      console.log(this);
+
+    //  console.log('current state *********** '+fsm.current)
       // module.exports = robot => {
       //   debugger;
       //   robot.hear(/(\w+)\s(\w+)/i, function(res) {
@@ -27,7 +30,7 @@ export const fsm = StateMachine.create({
       // }
     },
     onenterstandby: (event, from, to) => {
-      console.log('current state !!!!!!: '+fsm.current)
+      //console.log('current state !!!!!!: '+fsm.current)
       // module.exports = robot => {
       //   robot.hear(/(.*)/i, res => {
       //
@@ -56,6 +59,8 @@ export const fsm = StateMachine.create({
 
   }
 });
+
+module.exports = fsm;
 
 // robot.respond(/is it (weekend|holiday)\s?\?/i, function(msg){
 //     var today = new Date();
