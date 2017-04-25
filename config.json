@@ -1,0 +1,10 @@
+{
+  'mitie_file' : '/Users/work/Documents/GAWDI/project4/hubothackathon/MITIE-models/english/total_word_feature_extractor.dat'
+}
+
+{
+  "backend": "mitie",
+  "mitie_file": "./data/total_word_feature_extractor.dat",
+  "path" : "./models",
+  "data" : "./data/examples/rasa/demo-rasa.json"
+}

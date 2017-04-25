@@ -28,5 +28,6 @@ module.exports = robot => {
     // this should be wikipedia links
     let output = result.join()
     return res.send(output)
+
   })
 }
