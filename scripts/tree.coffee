@@ -1,3 +1,3 @@
-module.exports = (robot) ->
-
-  robot.hear /(.*)/i, (res) ->
+# module.exports = (robot) ->
+#
+#   robot.hear /(.*)/i, (res) ->

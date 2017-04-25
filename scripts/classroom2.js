@@ -36,21 +36,20 @@ const fsm = StateMachine.create({
   ],
   callbacks: {
     ongreet: (event, from, to) => {
-      module.exports = robot => {
-        robot.hear(/(.*)/i, res => {
-          fsm.goStandby(=>{
-            res.send('current state ***: '+fsm.current);
-            fsm.transition();
-          });
-        })
+      return module.exports = robot => {
+        robot.hear(/(\w+)\s(\w+)/i, function(res) {
+          res.reply('current state ***: '+fsm.current);
+          var name, user;
+          res.reply("Ok, lets start");
+          fsm.goStandby();
+        });
       }
-      return StateMachine.ASYNC;
     },
     onstandby: (event, from, to) => {
-      module.exports = robot => {
+      return module.exports = robot => {
         robot.hear(/(.*)/i, res => {
-          res.send('current state !!!: '+fsm.current);
-          fsm.goKeywordsearch();
+          res.reply('current state !!!!!!: '+fsm.current);
+          // return fsm.goKeywordsearch();
         })
       }
     },
