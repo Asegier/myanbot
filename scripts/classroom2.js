@@ -35,14 +35,14 @@ const fsm = StateMachine.create({
     { name: 'goFeedback',  from: ['keywordsearch', 'assistedsearch', 'recommended', 'chatter' ], to: 'feedback' }
   ],
   callbacks: {
-    ongreet: (event, from, to) => {
+    ongreet: () => {
       return module.exports = robot => {
         robot.hear(/(\w+)\s(\w+)/i, function(res) {
           res.reply('current state ***: '+fsm.current);
           var name, user;
           res.reply("Ok, lets start");
           fsm.goStandby();
-        });
+        })
       }
     },
     onstandby: (event, from, to) => {
@@ -71,6 +71,8 @@ const fsm = StateMachine.create({
 
   }
 });
+
+module.exports (fsm)
 
 // robot.respond(/is it (weekend|holiday)\s?\?/i, function(msg){
 //     var today = new Date();
