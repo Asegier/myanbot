@@ -15,48 +15,11 @@ const fsm = StateMachine.create({
   ],
   callbacks: {
     ongreet: (event, from, to) => {
-
-      console.log(this);
-
-    //  console.log('current state *********** '+fsm.current)
-      // module.exports = robot => {
-      //   debugger;
-      //   robot.hear(/(\w+)\s(\w+)/i, function(res) {
-      //     res.reply('current state ***: '+fsm.current);
-      //     var name, user;
-      //     res.reply("Ok, lets start");
-      //     fsm.goStandby();
-      //   });
-      // }
     },
     onenterstandby: (event, from, to) => {
-      //console.log('current state !!!!!!: '+fsm.current)
-      // module.exports = robot => {
-      //   robot.hear(/(.*)/i, res => {
-      //
-      //
-      //
-      //     res.reply('current state !!!!!!: '+fsm.current);
-      //     // return fsm.goKeywordsearch();
-      //   })
-      // }
     },
     onkeywordsearch: (event, from, to) => {
-      // module.exports = robot => {
-      //   robot.hear(/(.*)/i, res => {
-      //     res.send(fsm.current)
-      //     let input = res.match[1] // get the text inputted from user
-      //     let nounArr = []
-      //     nounArr.push(getNouns(input))
-      //     nounArr.push(fsm.current)
-      //     // convert array of words into string for output
-      //     // this should be wikipedia links
-      //     let output = nounArr.join()
-      //     res.send(output)
-      //   })
-      // }
     }
-
   }
 });
 
