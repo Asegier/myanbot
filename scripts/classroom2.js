@@ -63,20 +63,20 @@ module.exports = robot => {
   robot.hear(/(.*)/i, res => {
     let userid = res.message.user.id
     let roomid = res.message.user.room
+    let login = loginAuth(`myanbot2`, `myanbot2`, ()=>{ return });
     robot.brain.set(`userid`, userid)
     robot.brain.set(`roomid`, roomid)
     let raw = res.match.input
     let input = raw.replace(`myanbot2 `, ``) //only for slack, because they add myanbot2 before all my messages
     switch (fsm.current) {
       case `greet`:
-        loginAuth(`myanbot2`, `myanbot2`, function(body){
-          let login = JSON.parse(body)
-          robot.brain.set(`login`, login.data)
-        })
-        let login = robot.brain.get(`login`)
-        // console.log('!!!!!!!1', thing.authToken, thing.userId)
+        // loginAuth(`myanbot2`, `myanbot2`, function(body){
+        //   let parsedbody = JSON.parse(body)
+        //   this.login = parsedbody.data
+        // })
         console.log(`!!!!!!!!!!!!!`, login);
-        closeRoom(roomid, userid, login )
+        // console.log('!!!!!!!1', thing.authToken, thing.userId)
+        // closeRoom(roomid, `myanbot2`, brain )
         let name = robot.brain.get(`name`) || null
         console.log(name)
         if (name){
@@ -141,8 +141,6 @@ data = JSON.stringify({
 
 robot.http("https://midnight-train").header('Content-Type', 'application/json').post(data)(function(err, res, body) {});
  */
-
-
 /*
 robot.respond(/hey, create a branch plz/i, function(res) {
   var name, user;
