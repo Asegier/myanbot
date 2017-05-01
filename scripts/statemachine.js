@@ -1,3 +1,6 @@
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
 const StateMachine = require('javascript-state-machine');
 const solr = require('solr-client');
 const client = solr.createClient();
@@ -22,6 +25,17 @@ const fsm = StateMachine.create({
     }
   }
 });
+//
+// fsm.loadBot = cb => {
+//   const axios = require('axios');
+//   axios.get('http://localhost:3000/api/script.get')
+//     .then(function (docs) {
+//       cb(docs)
+//     })
+//     .catch(function (error) {
+//       cb(error);
+//     });
+// }
 
 module.exports = fsm;
 
