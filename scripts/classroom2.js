@@ -56,20 +56,29 @@ module.exports = robot => {
     let raw = res.match.input
     // let input = raw.replace(`myanbot2 `, ``) //only for slack, because they add myanbot2 before all my messages
 
-    // send msg
-    res.reply(bot.msg)
-
     // seek response
-    res.reply(bot.readUserInput(raw))
-    res.reply(!!bot.readUserInput(raw))
-
-    // if (bot.readUserInput(raw)){
-    //   res.reply('changing state')
-    //   bot.loadState(readUserInput(raw))
-    // } else {
-    //   res.reply('command not found')
-    // }
-
+    if (bot.readUserInput(raw)){
+      bot.loadState(bot.readUserInput(raw))
+      let arr = []
+      bot.listenfor.forEach((e)=>{
+        e.usrResponse.forEach((el)=>{
+          arr.push(el)
+        })
+      })
+      res.reply('Display Message: ' + bot.msg)
+      res.reply('Select: ' + arr)
+    } else {
+      bot.readState()
+      res.reply('Command not found')
+      let arr = []
+      bot.listenfor.forEach((e)=>{
+        e.usrResponse.forEach((el)=>{
+          arr.push(el)
+        })
+      })
+      res.reply('Display Message: ' + bot.msg)
+      res.reply('Select: ' + arr)
+    }
     // let userid = res.message.user.id
     // let roomid = res.message.user.room
     // let login;

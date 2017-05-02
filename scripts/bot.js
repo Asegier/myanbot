@@ -6,14 +6,20 @@ let Bot = function(input){
   self.script = null
   // state
   self.currentState = 'greet'
-  self.msg = 'Hello! say hi'
+  self.msg = 'Hello! say hi, or bye'
   self.listenfor = [ {
-        "toState": "menu",
+        "toState": "bye",
         "usrResponse": [
-          "hi"
+          "bye"
         ]
-      }]
-  self.options = 'butt'
+      },
+      {
+            "toState": "menu",
+            "usrResponse": [
+              "hi", "hola"
+            ]
+          }]
+  self.options = null
 
   self.loadBot = () => {
     axios({
@@ -27,29 +33,43 @@ let Bot = function(input){
   }
 
   self.loadState = (statename) => {
+    console.log('loadState: ', statename)
     self.script.forEach((e)=>{
-      if(statename == e.thisState){
+      if(e.thisState == statename){
+        console.log('loadState: changing state')
         self.currentState = e.thisState
-        self.botMsg = e.botMsg
+        self.msg = e.botMsg
         self.listenfor = e.listener
         if (e.options) {
           self.options = e.options
+        } else {
+          self.options = null
         }
       }
     })
   }
 
+  self.readState = () => {
+    console.log('!!!!!!!!!!!Read State!!!!!!!!!!!!!')
+    console.log('bot.currentState:', self.currentState)
+    console.log('bot.msg:', self.msg)
+    console.log('bot.listenfor:', self.listenfor)
+    console.log('bot.options:', self.options)
+    console.log('!!!!!!!!!!! End !!!!!!!!!!!!!')
+  }
+
   self.readUserInput = (input) => {
     let result = null
+    console.log(self.listenfor)
     self.listenfor.forEach((e)=>{
       e.usrResponse.forEach((el)=>{
         if (input == el){
           result = e.toState
-          console.log('!!!!!!!!!!!!!!!!!!', result)
-          return result
         }
       })
     })
+    console.log('readUserInput- result: ', result)
+    return result
   }
 
   self.getNouns = (input) => {
