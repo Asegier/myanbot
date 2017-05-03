@@ -1,7 +1,60 @@
-module.exports = robot => {
-  //                        _______________
-  // ______________________/ Utils API Calls \__
-  const getNouns = input => {
+const axios = require ('axios')
+// const async = require('asyncawait/async');
+// const await = require('asyncawait/await');
+const async = require('async')
+
+let Utils = function(input){
+  let self = this
+
+  self.getSolr = (searchterm, cb) => {
+    // let results = []
+    // takes in a single search term
+    let data = {
+      params:{
+        'q': `${searchterm}`,
+        'sort': 'score desc',
+        'fl': ['title', 'resourcename', 'content_type','score'],
+        'rows': 3,
+        'indent': true,
+        'dismax': true,
+        'q.alt': `${searchterm}`
+      }
+    }
+
+
+
+    axios({
+      method:'get',
+      url:'http://192.168.100.105:8983/solr/gettingstarted/query',
+      data: data
+    })
+    .then(function(res) {
+      let results = []
+      let foundArr = res.data.response.docs;
+      for (var i = 0; i < foundArr.length; i++) {
+        let solrlink = foundArr[i].resourcename[0]
+        let str = solrlink.replace(`/media/RACHEL/rachel`, `http://192.168.88.1`)
+        let newstr = str.split(` `).join(`%20`)
+        console.log(newstr)
+        results.push(newstr)
+      }
+      cb(results)
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+  }
+
+  self.getWiki = (keywordsArr) => {
+    let result = []
+    keywordsArr.forEach((e)=>{
+      let wikilink = `http://192.168.88.1:81/search?content=wikipedia_en_all_2016-02&pattern=${e}`
+      result.push(wikilink)
+    })
+    return result
+  }
+
+  self.getNouns = input => {
     const corenlp = require("corenlp-js-interface");
     // pass input through coreNLP for results
     let nlptext = corenlp(input,9000/*port*/,"tokenize,ssplit,pos,lemma,ner"/*annotators*/,"json"/*format*/);
@@ -20,53 +73,17 @@ module.exports = robot => {
     })
     return result
   }
-
-  const loginAuth = (username, pwd, cb) => {
-    let data = JSON.stringify({
-      "username": `${username}`, "password": `${pwd}`
-    })
-    robot.http(`http://192.168.100.105:3000/api/v1/login`)
-      .header(`Content-type`, `application/json`)
-      .post(data)(function(err, res, body){
-        if(err){
-          console.log(`login err:`, err)
-        } else {
-          cb(body)
-        }
-      })
-  }
-
-  const closeRoom = (roomid, userid, authToken) => {
-    let data = JSON.stringify({
-      "msg": "method",
-      "method": "eraseRoom",
-      "id": "92",
-      "params": [
-          `${roomid}`
-      ]
-    });
-    robot.http("http://192.168.100.105:3000/api/v1/im.close")
-    .header('X-Auth-Token', authToken)
-      .header('X-User-Id', userid)
-      .header('Content-Type', 'application/json')
-      .post(data)(function(err, res, body) {
-        if(err){
-          console.log(`room close err:`, err)
-        } else {
-          console.log(`room close body:`, body)
-        }
-      });
-  }
-
-  const loadBot = (cb) => {
-    robot.http(`http://localhost:3000/api/script.get`)
-    .header(`Content-type`, `application/json`)
-    .get()(function(err, res, body){
-      if(err){
-        console.log(`getdata err:`, err)
-      } else {
-        cb (body)
-      }
-    })
-  }
 }
+
+module.exports = Utils
+
+  // self.loadBot = () => {
+  //   axios({
+  //     method:'get',
+  //     url:'http://localhost:3000/api/script.get'
+  //   })
+  //   .then(function(response) {
+  //     self.brain = response.data[0]
+  //     self.script = JSON.parse(self.brain.script)
+  //   });
+  // }
