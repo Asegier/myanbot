@@ -1,8 +1,6 @@
-const fsm = require('./statemachine.js')
+// const fsm = require('./statemachine.js')
 const Bot = require('./bot.js')
 const Utils = require('./utils.js')
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
 
 // json: [branch, from, to, options, message, listenfor]
 let utils = new Utils()
@@ -18,45 +16,6 @@ startbot();
 
 
 module.exports = robot => {
-  //                        _______________
-  // ______________________/ Utils API Calls \__
-
-  const loginAuth = (username, pwd, cb) => {
-    let data = JSON.stringify({
-      "username": `${username}`, "password": `${pwd}`
-    })
-    robot.http(`http://192.168.100.105:3000/api/v1/login`)
-      .header(`Content-type`, `application/json`)
-      .post(data)(function(err, res, body){
-        if(err){
-          console.log(`login err:`, err)
-        } else {
-          cb(body)
-        }
-      })
-  }
-  const closeRoom = (roomid, userid, authToken) => {
-    let data = JSON.stringify({
-      "msg": "method",
-      "method": "eraseRoom",
-      "id": "92",
-      "params": [
-          `${roomid}`
-      ]
-    });
-    robot.http("http://192.168.100.105:3000/api/v1/im.close")
-    .header('X-Auth-Token', authToken)
-      .header('X-User-Id', userid)
-      .header('Content-Type', 'application/json')
-      .post(data)(function(err, res, body) {
-        if(err){
-          console.log(`room close err:`, err)
-        } else {
-          console.log(`room close body:`, body)
-        }
-      });
-  }
-
   let counter = 0
 
   robot.enter(function(res) {
@@ -65,6 +24,10 @@ module.exports = robot => {
 
   robot.hear(/\/restart/, res => {
     bot.loadState('1')
+  })
+
+  robot.hear(/\/reload/, res => {
+    bot.loadBot()
   })
 
   robot.hear(/(.*)/i, res => {
@@ -86,7 +49,7 @@ module.exports = robot => {
       case 'solr':
         let solrkeywordsArr = utils.getNouns(input)
         let searchSolr = utils.getSolr(solrkeywordsArr[0], (results)=>{
-          console.log('searchSolrrrrrrrrrrrrrrrr', results)
+          console.log('searchSolr', results)
           for (var i = 0; i < results.length; i++) {
             res.reply(results[i])
           }
@@ -96,8 +59,8 @@ module.exports = robot => {
     }
 
     // seek response
-    if (bot.readUserInput(input) && counter){
-      bot.loadState(bot.readUserInput(input))
+    if (bot.readUserInput(input, counter) && counter){
+      bot.loadState(bot.readUserInput(input, counter))
       counter = 0
       res.reply('Display Message: ' + bot.msg)
       res.reply('Select: ' + bot.getListenForWhichResponses())
@@ -108,6 +71,10 @@ module.exports = robot => {
       res.reply('Display Message: ' + bot.msg)
       res.reply('Select: ' + bot.getListenForWhichResponses())
     }
+  })
+}
+// To do with exitnig a room
+// -----------------------------------------------------------
     // let userid = res.message.user.id
     // let roomid = res.message.user.room
     // let login;
@@ -117,9 +84,42 @@ module.exports = robot => {
     // robot.brain.set(`userid`, userid)
     // robot.brain.set(`roomid`, roomid)
 
-
-  })
-}
+    // const loginAuth = (username, pwd, cb) => {
+    //   let data = JSON.stringify({
+    //     "username": `${username}`, "password": `${pwd}`
+    //   })
+    //   robot.http(`http://192.168.100.105:3000/api/v1/login`)
+    //     .header(`Content-type`, `application/json`)
+    //     .post(data)(function(err, res, body){
+    //       if(err){
+    //         console.log(`login err:`, err)
+    //       } else {
+    //         cb(body)
+    //       }
+    //     })
+    // }
+    // const closeRoom = (roomid, userid, authToken) => {
+    //   let data = JSON.stringify({
+    //     "msg": "method",
+    //     "method": "eraseRoom",
+    //     "id": "92",
+    //     "params": [
+    //         `${roomid}`
+    //     ]
+    //   });
+    //   robot.http("http://192.168.100.105:3000/api/v1/im.close")
+    //   .header('X-Auth-Token', authToken)
+    //     .header('X-User-Id', userid)
+    //     .header('Content-Type', 'application/json')
+    //     .post(data)(function(err, res, body) {
+    //       if(err){
+    //         console.log(`room close err:`, err)
+    //       } else {
+    //         console.log(`room close body:`, body)
+    //       }
+    //     });
+    // }
+    // -----------------------------------------------------------
 
 // Old HUBOT for contingency
 // switch (fsm.current) {

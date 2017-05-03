@@ -14,11 +14,11 @@ let Bot = function(){
         ]
       },
       {
-            "toState": "menu123",
-            "usrResponse": [
-              "hi", "hola"
-            ]
-          }]
+        "toState": "menu123",
+        "usrResponse": [
+          "hi", "hola"
+        ]
+      }]
   self.options = null
 
   self.loadBot = (botid, cb) => {
@@ -44,6 +44,7 @@ let Bot = function(){
       .then(function(response) {
         self.brain = response.data[0]
         self.script = JSON.parse(self.brain.script)
+        // bot.loadState('1')
         cb()
       });
     }
@@ -88,28 +89,39 @@ let Bot = function(){
         })
       } else if (typeof e.usrResponse == "string"){
         // if the script response is in string format
-        console.log('EEEEEEEEEEEEEEEEEEEEEEEEEE', e)
+        console.log('getListenForWhichResponses - Listenfor:', e)
         arr.push(e.usrResponse)
       }
     })
     return arr
   }
 
-  self.readUserInput = (input) => {
+  self.readUserInput = (input, counter) => {
     let result = null
-    // checks the user input against possible allowed responses
+    // checks the user input against the allowed responses
     // if found, return the toState/stateid, else null
     self.listenfor.forEach((e)=>{
       if (typeof e.usrResponse == "object"){
         e.usrResponse.forEach((el)=>{
+          // depreciated, since currently response is always string, and never object
           if (input == el){
-            result = e.toState
+            result = e.toState.trim()
           }
         })
       } else if (typeof e.usrResponse == "string"){
-        if (input == e.usrResponse){
-          result = e.toState
+
+        if (e.usrResponse && counter){
+          if (input == e.usrResponse){
+            result = e.toState.trim()
+          }
         }
+
+        if (!e.usrResponse && counter){
+          result = e.toState.trim()
+        }
+
+      } else {
+        console.log('readUserInput ERR - listenfor.usrResponse is not a string nor array')
       }
     })
     console.log('readUserInput- result: ', result)
