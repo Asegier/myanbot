@@ -4,5 +4,12 @@ set -e
 
 npm install
 export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
+export ROCKETCHAT_ROOM=‘’
+export LISTEN_ON_ALL_PUBLIC=true
+export ROCKETCHAT_USER=myanbot2
+export ROCKETCHAT_PASSWORD=myanbot2
+export ROCKETCHAT_AUTH=ldap
+export RESPOND_TO_LIVECHAT=true
+export ROCKETCHAT_URL=http://192.168.100.105:3000
 
 exec node_modules/.bin/hubot --name "" "$@"
