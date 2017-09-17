@@ -44,17 +44,16 @@ let Bot = function(){
       .then(function(response) {
         self.brain = response.data[0]
         self.script = JSON.parse(self.brain.script)
-        // bot.loadState('1')
         cb()
       });
     }
   }
 
   self.loadState = (stateid) => {
-    console.log('...loadState id: ', stateid)
     self.script.forEach((e)=>{
       if(e.id == stateid){
         console.log('loadState: changing state')
+        console.log('e', e)
         self.id = e.id
         self.msg = e.botMsg
         self.listenfor = e.listener
@@ -67,6 +66,7 @@ let Bot = function(){
         console.log('LoadState ERR: no such state/id found')
       }
     })
+    console.log('...loadState id: ', stateid)
   }
 
   self.readState = () => {
@@ -79,6 +79,7 @@ let Bot = function(){
   }
 
   self.getListenForWhichResponses = () => {
+    console.log('getListenForWhichResponses')
     // returns an array of possible user responses
     let arr = []
     self.listenfor.forEach((e)=>{
@@ -101,22 +102,23 @@ let Bot = function(){
     // checks the user input against the allowed responses
     // if found, return the toState/stateid, else null
     self.listenfor.forEach((e)=>{
+
       if (typeof e.usrResponse == "object"){
         e.usrResponse.forEach((el)=>{
-          // depreciated, since currently response is always string, and never object
           if (input == el){
             result = e.toState.trim()
           }
         })
-      } else if (typeof e.usrResponse == "string"){
 
+      } else if (typeof e.usrResponse == "string"){
+        console.log('e.USERRESPONSE: ', e.usrResponse)
         if (e.usrResponse && counter){
+          console.log('input/response!!!!!!!!!!!!!!', input)
           if (input == e.usrResponse){
             result = e.toState.trim()
           }
         }
-
-        if (!e.usrResponse && counter){
+        if (e.usrResponse == '*' && counter){
           result = e.toState.trim()
         }
 

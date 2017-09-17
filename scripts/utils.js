@@ -7,8 +7,6 @@ let Utils = function(input){
   let self = this
 
   self.getSolr = (searchterm, cb) => {
-    // let results = []
-    // takes in a single search term
     let data = {
       params:{
         'q': `${searchterm}`,
@@ -19,9 +17,7 @@ let Utils = function(input){
         'dismax': true,
         'q.alt': `${searchterm}`
       }
-    }
-
-
+    };
 
     axios({
       method:'get',
@@ -58,6 +54,7 @@ let Utils = function(input){
     const corenlp = require("corenlp-js-interface");
     // pass input through coreNLP for results
     let nlptext = corenlp(input,9000/*port*/,"tokenize,ssplit,pos,lemma,ner"/*annotators*/,"json"/*format*/);
+    
     let text = JSON.parse(nlptext);
     // sort through the JSON for the nouns
     let sentence = text.sentences[0]
